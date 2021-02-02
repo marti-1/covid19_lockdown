@@ -1,4 +1,5 @@
 library(dplyr)
+library(tidyr)
 
 cgrt = read.csv('OxCGRT_latest.csv')
 covid = read.csv('owid-covid-data.csv')
@@ -55,7 +56,7 @@ stringency_vs_dpm_plot = function(data, title) {
   p = ggplot(data=data) +
     geom_mosaic(aes(x=product(dpm_group,mean_si_group),fill=dpm_group)) +
     scale_fill_brewer(palette = "RdYlGn", direction=-1, name='DPM') +
-    xlab('Avg(StringencyIndex)') +
+    xlab('Avg(Stringency)') +
     ylab('DPM')+
     theme(
       axis.ticks.y = element_blank(),
@@ -68,18 +69,18 @@ stringency_vs_dpm_plot = function(data, title) {
   p
 }
 
-stringency_vs_dpm_plot(si_vs_dpm, title='Avg(StringencyIndex) ~ DPM')
+stringency_vs_dpm_plot(si_vs_dpm, title='Avg(Stringency) ~ DPM')
 
 p1 = stringency_vs_dpm_plot(si_vs_dpm %>% 
-                              filter(continent=='Europe'), title='Avg(StringencyIndex) ~ DPM | Europe')
+                              filter(continent=='Europe'), title='Avg(Stringency) ~ DPM | Europe')
 p2 = stringency_vs_dpm_plot(si_vs_dpm %>% 
-                              filter(continent=='Asia'), title='Avg(StringencyIndex) ~ DPM | Asia')
+                              filter(continent=='Asia'), title='Avg(Stringency) ~ DPM | Asia')
 p3 = stringency_vs_dpm_plot(si_vs_dpm %>% 
-                              filter(continent=='Africa'), title='Avg(StringencyIndex) ~ DPM | Africa')
+                              filter(continent=='Africa'), title='Avg(Stringency) ~ DPM | Africa')
 p4 = stringency_vs_dpm_plot(si_vs_dpm %>% 
-                              filter(continent=='North America'), title='Avg(StringencyIndex) ~ DPM | North America')
+                              filter(continent=='North America'), title='Avg(Stringency) ~ DPM | North America')
 p5 = stringency_vs_dpm_plot(si_vs_dpm %>% 
-                              filter(continent=='South America'), title='Avg(StringencyIndex) ~ DPM | South America')
+                              filter(continent=='South America'), title='Avg(Stringency) ~ DPM | South America')
 
 combined <- p1 / (p2+p3) / (p4 + p5) & theme(legend.position = "bottom")
 combined + plot_layout(guides = "collect")
@@ -150,7 +151,7 @@ restrictions_heatmap(cgrt_monthly, 'Latvia') +
 
 # neighbours
 library("ggplot2")
-theme_set(theme_bw())
+# theme_set(theme_bw())
 library("sf")
 library("rnaturalearth")
 library("rnaturalearthdata")

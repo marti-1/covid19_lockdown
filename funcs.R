@@ -1,6 +1,10 @@
 library(dplyr)
 library(tidyr)
 
+library(ggplot2)
+library(ggmosaic)
+library(patchwork)
+
 indicator_score = function(v, f, F, N) {
   score = numeric(length(v))
   for (i in 1:length(v)) {
@@ -104,4 +108,30 @@ load_data = function() {
   )
 }
 
-data = load_data()
+stringency_vs_dpm_plot = function(df) {
+  ggplot(data=df) +
+    geom_mosaic(aes(x=product(dpm_group, mean_si_group), fill=dpm_group)) +
+    scale_fill_brewer(palette = "RdYlGn", direction=-1, name='DPM') +
+    xlab('Avg(Stringency)') +
+    ylab('DPM')+
+    theme(
+      axis.ticks.y = element_blank(),
+      axis.text.y = element_blank(),
+      axis.text.x = element_text(angle=90)
+    )
+}
+
+restrictions_heatmap = function(df, country) {
+  df_monthly_long = df %>% 
+    filter(CountryName == country) %>%
+    select(!CountryName) %>%
+    pivot_longer(!month, names_to = 'policy', values_to = 'stringency')
+  
+  
+  ggplot(df_monthly_long, aes(x=policy, y=factor(month, levels=rev(levels(month))), fill=stringency)) +
+    geom_tile() +
+    scale_fill_distiller(palette = "RdYlGn") +
+    labs(title=country)+
+    ylab('') +
+    scale_x_discrete(labels=c('Schools', 'Workplace', 'Pub. Events', 'Gatherings','Pub. Transport', 'Stay home','Int move', 'Ext move'))
+}

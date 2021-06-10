@@ -143,7 +143,8 @@ restrictions_heatmap = function(df, country) {
     geom_tile() +
     scale_fill_distiller(palette = "RdYlGn") +
     labs(title=country)+
-    ylab('')
+    ylab('') +
+    scale_x_discrete(labels=c('Schools', 'Workplace', 'Pub. Events', 'Gatherings','Pub. Transport', 'Stay home','Int move', 'Ext move'))
 }
 
 restrictions_heatmap(cgrt_monthly, 'Latvia') +
